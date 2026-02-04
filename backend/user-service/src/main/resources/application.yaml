@@ -23,6 +23,13 @@ spring:
       ddl-auto: update
     show-sql: true
 
+# JWT Configuration
 jwt:
-  secret: foodingo-2026-secret-key-change-in-production
-  expiration: 86400000 # 24 hours
+  secret: foodingo-microservices-2026-secret-key-for-jwt-tokens
+  expiration: 86400000 # 24 hours in milliseconds
+
+# Logging
+logging:
+  level:
+    com.foodingo: DEBUG
+    org.springframework.security: DEBUG

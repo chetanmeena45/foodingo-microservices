@@ -5,6 +5,7 @@ import com.foodingo.orderservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class OrderController {
     private final OrderService orderService;
     
     @PostMapping
+    @PreAuthorize("hasRole('USER')")  // ← USERS can create orders
     public ResponseEntity<ApiResponse> createOrder(@RequestBody OrderRequest request) {
         OrderResponse response = orderService.createOrder(request);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -42,6 +44,7 @@ public class OrderController {
     }
     
     @PutMapping("/{id}/status")
+    @PreAuthorize("hasRole('RESTAURANT') OR hasRole('ADMIN')")  // ← Restaurant owners + ADMIN
     public ResponseEntity<ApiResponse> updateOrderStatus(
             @PathVariable String id,
             @RequestBody StatusUpdateRequest request) {

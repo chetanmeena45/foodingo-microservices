@@ -1,7 +1,6 @@
 server:
   port: 8082
-  servlet:
-    context-path: /api/restaurants
+  # servlet.context-path REMOVED → Single path URLs! ✅
 
 spring:
   application:
@@ -11,7 +10,7 @@ spring:
     url: jdbc:h2:mem:restaurantdb
     driver-class-name: org.h2.Driver
     username: sa
-    password: 
+    password: ""
   
   h2:
     console:
@@ -22,3 +21,26 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+# JWT Configuration (MUST match User Service secret)
+jwt:
+  secret: foodingo-microservices-2026-secret-key-for-jwt-tokens
+
+logging:
+  level:
+    com.foodingo.restaurantservice: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG

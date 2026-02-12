@@ -1,3 +1,4 @@
+import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
@@ -6,17 +7,13 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>🍔 Foodingo Fullstack LIVE! 🎉</h1>
+        <p><strong>Backend:</strong> localhost:8080 ✅ (4 microservices)</p>
+        <p><strong>Frontend:</strong> localhost:3000 ✅ (React dashboard)</p>
+        <p><strong>GitHub:</strong> chetanmeena45/foodingo-microservices ✅</p>
+        <button className="btn btn-success btn-lg mt-3">
+          Day 1 COMPLETE! 🚀
+        </button>
       </header>
     </div>
   );

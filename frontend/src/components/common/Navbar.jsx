@@ -18,7 +18,7 @@ const Navbar = () => {
     <BSNavbar bg="primary" variant="dark" expand="lg" className="sticky-top">
       <Container>
         <BSNavbar.Brand as={Link} to="/" className="fw-bold">
-          í½” Foodingo
+          ï¿½ï¿½ï¿½ Foodingo
         </BSNavbar.Brand>
         
         <BSNavbar.Toggle aria-controls="navbar-nav" />

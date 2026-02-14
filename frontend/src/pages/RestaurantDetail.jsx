@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { Container, Row, Col, Spinner, Alert, Breadcrumb } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Container, Row, Col, Spinner, Alert, Button } from 'react-bootstrap';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useRestaurants } from '../hooks/useRestaurants';
 import MenuItem from '../components/features/restaurants/MenuItem';
@@ -8,27 +8,28 @@ import MenuItem from '../components/features/restaurants/MenuItem';
 const RestaurantDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { 
-    selectedRestaurant, 
-    menuItems, 
-    isLoading, 
-    error, 
-    loadRestaurantById,
-    clearSelected 
-  } = useRestaurants();
+  const { selectedRestaurant, menuItems, isLoading, error, loadRestaurantById } = useRestaurants();
 
   useEffect(() => {
     if (id) {
       loadRestaurantById(id);
     }
-    return () => clearSelected();
-  }, [id, loadRestaurantById, clearSelected]);
+  }, [id, loadRestaurantById]);
+
+  const groupedItems = menuItems.reduce((acc, item) => {
+    const category = item.category || 'Other';
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(item);
+    return acc;
+  }, {});
 
   if (isLoading) {
     return (
-      <Container className="py-5 text-center">
-        <Spinner animation="border" />
-        <p className="mt-2">Loading restaurant...</p>
+      <Container className="text-center py-5">
+        <Spinner animation="border" variant="primary" />
+        <p className="mt-2">Loading restaurant details...</p>
       </Container>
     );
   }
@@ -36,52 +37,74 @@ const RestaurantDetail = () => {
   if (error || !selectedRestaurant) {
     return (
       <Container className="py-5">
-        <Alert variant="danger">Restaurant not found</Alert>
+        <Alert variant="danger">
+          {error || 'Restaurant not found'}
+        </Alert>
+        <Button variant="primary" onClick={() => navigate('/restaurants')}>
+          Back to Restaurants
+        </Button>
       </Container>
     );
   }
 
   return (
     <Container className="py-4">
-      <Breadcrumb>
-        <Breadcrumb.Item onClick={() => navigate('/restaurants')}>
-          <FaArrowLeft className="me-1" /> Restaurants
-        </Breadcrumb.Item>
-        <Breadcrumb.Item active>{selectedRestaurant.name}</Breadcrumb.Item>
-      </Breadcrumb>
+      <Button 
+        variant="link" 
+        className="text-decoration-none mb-3"
+        onClick={() => navigate(-1)}
+      >
+        <FaArrowLeft className="me-1" /> Back to Restaurants
+      </Button>
 
-      <Row className="mb-5">
-        <Col md={4}>
-          <img
-            src={selectedRestaurant.imageUrl || 'https://via.placeholder.com/400x300?text=Restaurant'}
-            alt={selectedRestaurant.name}
-            className="img-fluid rounded shadow"
-            style={{ height: '300px', objectFit: 'cover' }}
-          />
-        </Col>
-        <Col md={8}>
-          <h1>{selectedRestaurant.name}</h1>
-          <p className="lead text-muted">{selectedRestaurant.address}</p>
-          <div>
-            <span className="badge bg-primary fs-6 me-2">{selectedRestaurant.cuisineType}</span>
-            <span className="badge bg-success fs-6">
-              {selectedRestaurant.isActive ? 'Open' : 'Closed'}
-            </span>
-          </div>
-        </Col>
-      </Row>
-
-      <h2>Menu ({menuItems.length} items)</h2>
-      {menuItems.length === 0 ? (
-        <Alert variant="info">No menu items available</Alert>
-      ) : (
+      <div className="mb-5">
         <Row>
-          {menuItems.map((item) => (
-            <Col key={item.id} lg={6} className="mb-4">
-              <MenuItem item={item} restaurantId={id} restaurantName={selectedRestaurant.name} />
-            </Col>
-          ))}
+          <Col md={4}>
+            <img
+              src={selectedRestaurant.imageUrl || 'https://via.placeholder.com/400x300'}
+              alt={selectedRestaurant.name}
+              className="img-fluid rounded shadow"
+              style={{ width: '100%', height: '250px', objectFit: 'cover' }}
+            />
+          </Col>
+          <Col md={8}>
+            <h1 className="display-5">{selectedRestaurant.name}</h1>
+            <p className="text-muted mb-2">{selectedRestaurant.address}</p>
+            <p className="mb-2">
+              <span className="badge bg-info me-2">{selectedRestaurant.cuisineType}</span>
+              {selectedRestaurant.phone && (
+                <span className="badge bg-secondary">{selectedRestaurant.phone}</span>
+              )}
+            </p>
+            {!selectedRestaurant.isActive && (
+              <Alert variant="warning" className="mt-2">
+                This restaurant is currently closed
+              </Alert>
+            )}
+          </Col>
         </Row>
+      </div>
+
+      <h3 className="mb-4">Our Menu</h3>
+      
+      {menuItems.length === 0 ? (
+        <Alert variant="info">
+          No menu items available for this restaurant.
+        </Alert>
+      ) : (
+        Object.entries(groupedItems).map(([category, items]) => (
+          <div key={category} className="mb-5">
+            <h4 className="mb-3 pb-2 border-bottom">{category}</h4>
+            {items.map((item) => (
+              <MenuItem 
+                key={item.id} 
+                item={item}
+                restaurantId={selectedRestaurant.id}
+                restaurantName={selectedRestaurant.name}
+              />
+            ))}
+          </div>
+        ))
       )}
     </Container>
   );

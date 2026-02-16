@@ -16,6 +16,7 @@ import Register from './pages/Register';
 import Restaurants from './pages/Restaurants';
 import RestaurantDetail from './pages/RestaurantDetail';
 import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';           // ← ADDED
 
 // Protected Pages
 import Orders from './pages/Orders';
@@ -44,6 +45,8 @@ function App() {
               {/* Protected Routes - Any Authenticated User */}
               <Route element={<ProtectedRoute />}>
                 <Route path="/orders" element={<Orders />} />
+                <Route path="/orders/:id" element={<Orders />} />    {/* ← ADDED */}
+                <Route path="/checkout" element={<Checkout />} />    {/* ← ADDED */}
                 <Route path="/profile" element={<Profile />} />
               </Route>
 

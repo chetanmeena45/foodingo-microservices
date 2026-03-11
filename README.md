@@ -649,5 +649,3 @@ Distributed under the MIT License. See `LICENSE` for more information.
   <sub>© 2026 Foodingo. All rights reserved.</sub>
 </div>
 ```
-
-This README is now ready to be added directly to your repository. Just copy the entire content and replace the existing `README.md` file in your repository.
